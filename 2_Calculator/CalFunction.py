@@ -8,13 +8,15 @@ class Cal_Action(Enum):
     Non = 0
     Add = 1
     Min = 2
-    Equl = 3 
+    Mul = 3
+    Dvi = 4
+    Equl = 5 
 
 class Window(QtWidgets.QWidget):
     NOW_ACTION =""
+    LAST_ACTION = "none"
     ORIGINAL_VAL = 0
     NOW_VAL = 0
-    LAST_CALACTION = "none"
     LAST_INPUT_NUM = 0
 
     def __init__(self):
@@ -38,18 +40,16 @@ class Window(QtWidgets.QWidget):
         self.ui.btn_9.clicked.connect(lambda:self.numberPressed(9))
         self.ui.btn_add.clicked.connect(self.setAdd)
         self.ui.btn_min.clicked.connect(self.setMin)
+        self.ui.btn_mul.clicked.connect(self.setMul)
+        self.ui.btn_div.clicked.connect(self.setDvi)
         self.ui.btn_eql.clicked.connect(self.equal)
-        self.ui.btn_fract.clicked.connect(self.callCmd)
-
-    def callCmd(self):
-        os.system("ipconfig")
 
     def setNowAction(self, _action):
         self.NOW_ACTION = _action
 
     def setLastCalAction(self, _action):
-        self.LAST_CALACTION = _action
-        self.setNowAction("_action")
+        self.LAST_ACTION = _action
+        self.setNowAction(_action)
 
     def clear(self):
 
@@ -66,9 +66,9 @@ class Window(QtWidgets.QWidget):
 
     def numberPressed(self, num):
 
-        if self.NOW_ACTION == "equal":
+        if self.NOW_ACTION == Cal_Action.Equl:
             self.setNowValZero() #should clear now val for new add after equal
-            self.setNowAction("none")
+            self.setNowAction(Cal_Action.Equl)
 
         self.NOW_VAL = (self.NOW_VAL * 10) + num
         print self.NOW_VAL
@@ -76,33 +76,62 @@ class Window(QtWidgets.QWidget):
         self.LAST_INPUT_NUM = num
 
     def setAdd(self):
-
-        self.setLastCalAction("add")
-        self.ui.label_equation.setText(str(self.NOW_VAL) + " +") #should have now_val for keep add
+        self.ui.label_equation.setText(str(self.NOW_VAL) + " +") 
         self.ORIGINAL_VAL = self.NOW_VAL
         self.NOW_VAL = 0
+        self.setLastCalAction(Cal_Action.Add)
 
 
     def setMin(self):
-
-        self.setLastCalAction("min")
-        self.ui.label_equation.setText(str(self.NOW_VAL) + " -") #should have now_val for keep add
+        self.ui.label_equation.setText(str(self.NOW_VAL) + " -") 
         self.ORIGINAL_VAL = self.NOW_VAL
         self.NOW_VAL = 0
+        self.setLastCalAction(Cal_Action.Min)
+
+    def setMul(self):
+        self.ui.label_equation.setText(str(self.NOW_VAL) + " *") 
+        self.ORIGINAL_VAL = self.NOW_VAL
+        self.NOW_VAL = 0
+        self.setLastCalAction(Cal_Action.Mul)
+
+    def setDvi(self):
+        self.ui.label_equation.setText(str(self.NOW_VAL) + " /")
+        self.ORIGINAL_VAL = self.NOW_VAL
+        self.NOW_VAL = 0
+        self.setLastCalAction(Cal_Action.Dvi)
 
     def equal(self):
         self.ui.label_equation.setText("")
 
-        if self.LAST_CALACTION == "add":
-            self.NOW_VAL += self.LAST_INPUT_NUM # do the math
+        # do the math
+        if self.LAST_ACTION == Cal_Action.Add:
+            self.NOW_VAL = self.ORIGINAL_VAL + self.NOW_VAL 
+
+        elif self.LAST_ACTION == Cal_Action.Min:
+            self.NOW_VAL = self.ORIGINAL_VAL - self.NOW_VAL
+
+        elif self.LAST_ACTION == Cal_Action.Mul:
+            self.NOW_VAL = self.ORIGINAL_VAL * self.NOW_VAL
+
+        elif self.LAST_ACTION == Cal_Action.Dvi:
+            if self.ORIGINAL_VAL == 0 :
+                print("Can't not divid by zero.")
+                self.clear()
+            else:
+                self.NOW_VAL = self.ORIGINAL_VAL / self.NOW_VAL 
+
         else:
-            self.setNowAction("equal")
-            print self.NOW_VAL, " + ", self.ORIGINAL_VAL, " = ", self.NOW_VAL + self.ORIGINAL_VAL
-            self.NOW_VAL += self.ORIGINAL_VAL #do the math
+            self.setNowAction(Cal_Action.Equl)
+            self.NOW_VAL += self.ORIGINAL_VAL 
+
+        print("{} {} {} = {}".format(self.ORIGINAL_VAL, self.LAST_ACTION.name, self.LAST_INPUT_NUM, self.NOW_VAL))
 
         self.ui.lcdNumber.display(self.NOW_VAL)
-        print "equal= " , self.NOW_VAL
+        # print "equal= " , self.NOW_VAL
         self.ORIGINAL_VAL = self.NOW_VAL
+        
+
+ 
 
 
 
@@ -110,7 +139,6 @@ class Window(QtWidgets.QWidget):
 
 
 def setUpWindow():
-    print "setUpBtnConnect"
     app = QtWidgets.QApplication(sys.argv)
     window = Window()
     window.show()
