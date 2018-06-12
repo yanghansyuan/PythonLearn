@@ -1,74 +1,68 @@
-#class variable, static method, subClass, magic function, property, getter/setter, enum
+#class, enum, class variable/method, subClass, property, getter/setter, magic function/repr/deleter/add
 
 class Gender:
-    Male =1
-    Female =2
-
-class MoveMode:
-    walk = 1
-    fly = 2
+    Male=1
+    Female=2
 
 
-class Human(object): #inherit from object for new class style
+class Human(object):
 
-    Movement = MoveMode.walk 
+    Power = 0
 
-    def __init__(self, name, age, gender):
-        print "Human Create!"
-        self.Name = name
+    def __init__(self,first,last,age,gender):
+        print "Human Created!"
+        self.First = first
+        self.Last = last
         self.Age = age
         self.Gender = gender
-        # self.Power = 1 * self.Age
-
-    def gethumanInfo(self):
-        return "Human info, Name: {}, Age: {}".format(self.Name, self.Age)
+        # self.Name = self.First + self.Last
     
-
-    def move(self):
-        return self.Movement
+    def getHumanInfo(self):
+        print "first:{}, last:{}, age:{}, gender{}, power:{}".format(self.First,self.Last,self.Age,self.Gender,self.Power)
 
     @classmethod
-    def evolution (cls,newMode):
-        cls.Movement = newMode
+    def changeAllPower(cls,val):
+        cls.Power = val
 
-    @property #Getter: use this property function to replace original property calculation with out changing interface for instance
-    def Power(self):
-        print "property here"
-        return 1 * self.Age
+    @property
+    def Name(self):
+        return self.First + self.Last
     
-    @Power.setter
-    def Power(self, val):
-        print "Setter here"
-        self._Power = 0.003 # need "_" here inpython 2.7!
-
     def __repr__(self):
-        return "It's a human"
+        return "This is Human Class."
+
+    def __add__(self,other):
+        print "__add__"
+        return self.Age + other.Age
+
+    @Name.deleter
+    def Name(self):
+        self.First = ""
 
 class NewHuman(Human):
-    def __init__(self,name,age,gender,newMoode):
-        super(NewHuman,self).__init__(name,age,gender)
+    def __init__(self,first,last,age,gender,speed):
+        super(NewHuman,self).__init__(first,last,age,gender)
+        self.Speed = speed
 
+    def getHumanInfo(self):
+        print "first:{}, last:{}, age:{}, gender{}, power:{}, speed:{}".format(self.First,self.Last,self.Age,self.Gender,self.Power,self.Speed)
 
-Human.evolution(MoveMode.fly) #change all class method
+Human.changeAllPower(10)
 
-# Adam = Human("Adam",1, Gender.Male)
-# print Adam.name()
-# print Adam.move()
+Adam = Human("Adam","Yang",2,Gender.Male)
+Adam.getHumanInfo()
 
-# Eva = Human("Eva",1,Gender.Female)
-# print Eva.name()
-# Eva.Movement = MoveMode.walk #only change one class
-# print Eva.move()
+Adam.Last = "Chen"
 
-# Dante = NewHuman("Dante",5,Gender.Male, MoveMode.fly )
-# print Dante.Name
-# print Dante.gethumanInfo()
-# Dante.Age = 10 #should change power by here
-# print Dante.gethumanInfo()
-# print Dante.Power
+del Adam.Name
+print Adam.Name
 
-Adam = Human("Adam",1, Gender.Male)
-Adam.Power = 100
-print Adam.Power
-print (Adam.__repr__())
-print Adam.Name.__str__()
+Eva = Human("Eva","Chen",3,Gender.Female)
+print Adam + Eva
+
+# Eva = Human("Eva","Chen",0,Gender.Female)
+# Eva.Power = 2
+# Eva.getHumanInfo()
+
+# Dante = NewHuman("Dante","Wong",1,Gender.Male,33.1)
+# Dante.getHumanInfo()
