@@ -1,68 +1,69 @@
 #class, enum, class variable/method, subClass, property, getter/setter, magic function/repr/deleter/add
 
 class Gender:
-    Male=1
-    Female=2
-
+    Male =1
+    Female =2
 
 class Human(object):
 
-    Power = 0
+    Defense = 0
 
-    def __init__(self,first,last,age,gender):
+    def __init__(self, first, last, age, gender, power):
         print "Human Created!"
         self.First = first
-        self.Last = last
+        self.Last =  last
         self.Age = age
         self.Gender = gender
+        self.Power = power
         # self.Name = self.First + self.Last
-    
+
     def getHumanInfo(self):
-        print "first:{}, last:{}, age:{}, gender{}, power:{}".format(self.First,self.Last,self.Age,self.Gender,self.Power)
-
-    @classmethod
-    def changeAllPower(cls,val):
-        cls.Power = val
-
+        return "first:{}, last:{}, age:{}, gender:{}, power:{}, defense:{}".format(self.First,self.Last,self.Age,self.Gender,self.Power,self.Defense)
+    
     @property
     def Name(self):
         return self.First + self.Last
-    
-    def __repr__(self):
-        return "This is Human Class."
-
-    def __add__(self,other):
-        print "__add__"
-        return self.Age + other.Age
 
     @Name.deleter
     def Name(self):
         self.First = ""
 
+    @classmethod
+    def changeDefense(cls,val):
+        cls.Defense = val
+    
+    def __repr__(self):
+        return "This is a Human!"
+
+    def __add__(self,other):
+        return self.Age + other.Age
+
+    
+
 class NewHuman(Human):
-    def __init__(self,first,last,age,gender,speed):
-        super(NewHuman,self).__init__(first,last,age,gender)
+    def __init__(self, first, last, age, gender, power,speed):
+        super(NewHuman,self).__init__(first, last, age, gender, power)
         self.Speed = speed
+        print "New Human Created!"
 
     def getHumanInfo(self):
-        print "first:{}, last:{}, age:{}, gender{}, power:{}, speed:{}".format(self.First,self.Last,self.Age,self.Gender,self.Power,self.Speed)
+        return "first:{}, last:{}, age:{}, gender:{}, power:{}, defense:{}, speed:{}".format(self.First,self.Last,self.Age,self.Gender,self.Power,self.Defense, self.Speed)
 
-Human.changeAllPower(10)
+Human.changeDefense(10)
 
-Adam = Human("Adam","Yang",2,Gender.Male)
-Adam.getHumanInfo()
-
-Adam.Last = "Chen"
+Adam = Human("Adam","Chen",1,Gender.Male,1)
+# Eva = Human("Eva","Wong",3,Gender.Female,2)
 
 del Adam.Name
 print Adam.Name
 
-Eva = Human("Eva","Chen",3,Gender.Female)
-print Adam + Eva
+# print Adam + Eva
 
-# Eva = Human("Eva","Chen",0,Gender.Female)
-# Eva.Power = 2
-# Eva.getHumanInfo()
 
-# Dante = NewHuman("Dante","Wong",1,Gender.Male,33.1)
-# Dante.getHumanInfo()
+
+# Eva = Human("Eva","Wong",0,Gender.Female,2)
+# Eva.Defense = 2 
+# print Eva.getHumanInfo()
+
+# Dante = NewHuman("Dante","Yang",0,Gender.Male,2,0.23)
+# print Dante.getHumanInfo()
