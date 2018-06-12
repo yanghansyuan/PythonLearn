@@ -1,14 +1,8 @@
-from enum import Enum
-class WingForm(Enum):
-    SiuNimTau = 1
-    ChumKiu = 2
-    BiuGee = 3
-
 class wingChung:
 
     nowForm = "none"
     name = ""
-    master ="" 
+    master =""
     power = 100
 
     def __init__(self, name, form, master):
@@ -16,7 +10,9 @@ class wingChung:
         self.nowForm = form
         self.master = master
         
-        print("name: {}, start form is: {}. And learn from Sifu: {}.".format(self.name,self.nowForm,self.master))
+        # print "name: " + self.name + ", " + "start form is " + self.nowForm + ". And learn from Sifu"  + self.master + "." #original one, bad
+        # print("name: {}, start form is: {}. And learn from Sifu: {}.".format(self.name,self.nowForm,self.master))
+        print("name: {0}, start form is: {1}. And learn from Sifu: {2}.".format(self.name,self.nowForm,self.master))
 
     def learnNewForm(self,form):
         nowForm  = form
@@ -39,8 +35,8 @@ class wingChung:
     def setPower(self,power):
         self.power = power
 
-myWingChung = wingChung("yhs",WingForm.SiuNimTau.name,"Chen Sifu")
-myWingChung2 = wingChung("livi", WingForm.BiuGee.name,"yhs")
+myWingChung = wingChung("yhs","aaa","Chen Sifu")
+myWingChung2 = wingChung("livi", "aaa","yhs")
 
 myWingChung.setPower(150)
 myWingChung2.setPower(180)
@@ -51,9 +47,16 @@ myWingChung2.getNowPower()
 myWingChung.resetAllPower(200) # reset all with class variable
 myWingChung.getNowPower() #not effect because already set individually 
 myWingChung2.getNowPower() #not effect because already set individually 
-myWingChung3 = wingChung("user", WingForm.ChumKiu.name,"yhs")
+myWingChung3 = wingChung("user", "aaa","yhs")
 myWingChung3.getNowPower() #default val has been reset from class variable 
 
 print(myWingChung.__dict__)
 print(myWingChung2.__dict__)
 print(myWingChung3.__dict__)
+
+# myWingChung.learnNewForm("bbb")
+# myWingChung.getNowForm()
+# myWingChung.switchUseForm("bbb")
+# myWingChung.getNowForm()
+# myWingChung2.getNowForm()
+
